@@ -2,18 +2,20 @@ const should = require('chai').should()
 
 const testGetPendingTransactionByHash = (txByHash, deployerF0Addr) => {
   txByHash.should.contain.keys(
-    'blockHash',
-    'blockNumber',
-    'from',
-    'hash',
-    'transactionIndex',
-  )
-  txByHash.from.should.be.a.properAddress
-  txByHash.from.should.hexEqual(deployerF0Addr)
-  should.not.exist(txByHash.blockHash)
-  should.not.exist(txByHash.blockNumber)
-  should.not.exist(txByHash.transactionIndex)
-  should.not.exist(txByHash.to)
+    "blockHash",
+    "blockNumber",
+    "from",
+    "hash",
+    "transactionIndex"
+  );
+  txByHash.from.should.be.a.properAddress;
+  txByHash.from.should.hexEqual(deployerF0Addr);
+  txByHash.blockHash.should.equal(
+    "0x0000000000000000000000000000000000000000000000000000000000000000"
+  );
+  txByHash.blockNumber.should.equal(0);
+  txByHash.transactionIndex.should.equal(0);
+  should.not.exist(txByHash.to);
 }
 
 const testGetPendingTransactionReceipt = (txReceipt) => {
@@ -36,24 +38,24 @@ const testGetMinedTransactionByHash = (txByHash, deployerF0Addr) => {
 
 const testGetMinedTransactionReceipt = (txReceipt, isWeb3Js) => {
   txReceipt.should.contain.keys(
-    'blockHash',
-    'blockNumber',
-    'from',
-    'cumulativeGasUsed',
-    'gasUsed',
-    'logs',
-    'logsBloom',
-    'transactionHash',
-    'transactionIndex',
-    'effectiveGasPrice',
-  )
-  txReceipt.gasUsed.should.be.gt(0)
-  txReceipt.cumulativeGasUsed.should.be.gte(txReceipt.gasUsed)
+    "blockHash",
+    "blockNumber",
+    "from",
+    "cumulativeGasUsed",
+    "gasUsed",
+    "logs",
+    "logsBloom",
+    "transactionHash",
+    "transactionIndex",
+    "effectiveGasPrice"
+  );
+  txReceipt.gasUsed.should.be.gt(0);
+  // txReceipt.cumulativeGasUsed.should.be.gte(txReceipt.gasUsed)
   let { status } = txReceipt;
   if (isWeb3Js) {
-    status = status ? 1 : 0
+    status = status ? 1 : 0;
   }
-  status.should.equal(1)
+  status.should.equal(1);
 }
 
 const testGetBlock = (block, deploymentTxHash) => {

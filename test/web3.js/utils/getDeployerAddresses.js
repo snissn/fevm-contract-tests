@@ -3,13 +3,8 @@ const { web3 } = require('hardhat')
 const { actorIdToF0Address, isFilecoinNetwork, getDeployerF1Address } = require('../../util/utils')
 
 const getDeployerAddress = async () => {
-  if (await isFilecoinNetwork()) {
-    const deployerF1Addr = getDeployerF1Address()
-    return getDeployerF0Address(deployerF1Addr)
-  } else {
-    return (await web3.eth.getAccounts())[0]
-  }
-}
+  return (await web3.eth.getAccounts())[0];
+};
 
 const getDeployerF0Address = async (f1Addr) => {
   try {
