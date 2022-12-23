@@ -10,31 +10,29 @@ const testGetPendingTransactionByHash = (txByHash, deployerF0Addr) => {
   );
   txByHash.from.should.be.a.properAddress;
   txByHash.from.should.hexEqual(deployerF0Addr);
-  txByHash.blockHash.should.equal(
-    "0x0000000000000000000000000000000000000000000000000000000000000000"
-  );
-  txByHash.blockNumber.should.equal(0);
-  txByHash.transactionIndex.should.equal(0);
+  should.not.exist(txByHash.blockHash);
+  should.not.exist(txByHash.blockNumber);
+  should.not.exist(txByHash.transactionIndex);
   should.not.exist(txByHash.to);
-}
+};
 
 const testGetPendingTransactionReceipt = (txReceipt) => {
   // eth_getTransactionReceipt returns null for both pending and unknown transactions
-  should.not.exist(txReceipt)
-}
+  should.not.exist(txReceipt);
+};
 
 const testGetMinedTransactionByHash = (txByHash, deployerF0Addr) => {
   txByHash.should.contain.keys(
-    'blockHash',
-    'blockNumber',
-    'from',
-    'hash',
-    'transactionIndex',
-  )
-  txByHash.from.should.be.a.properAddress
-  txByHash.from.should.hexEqual(deployerF0Addr)
-  should.not.exist(txByHash.to)
-}
+    "blockHash",
+    "blockNumber",
+    "from",
+    "hash",
+    "transactionIndex"
+  );
+  txByHash.from.should.be.a.properAddress;
+  txByHash.from.should.hexEqual(deployerF0Addr);
+  should.not.exist(txByHash.to);
+};
 
 const testGetMinedTransactionReceipt = (txReceipt, isWeb3Js) => {
   txReceipt.should.contain.keys(
@@ -56,32 +54,13 @@ const testGetMinedTransactionReceipt = (txReceipt, isWeb3Js) => {
     status = status ? 1 : 0;
   }
   status.should.equal(1);
-}
+};
 
 const testGetBlock = (block, deploymentTxHash) => {
-  block.should.contain.keys(
-    'parentHash',
-    'sha3Uncles',
-    'miner',
-    'stateRoot',
-    'transactionsRoot',
-    'receiptsRoot',
-    'logsBloom',
-    'number',
-    'gasLimit',
-    'gasUsed',
-    'timestamp',
-    'extraData',
-    'mixHash',
-    'nonce',
-    'size',
-    'transactions',
-    'uncles',
-  )
-  block.gasUsed.should.be.gt(0)
-  block.transactions.should.not.be.empty
-  block.transactions.should.contain(deploymentTxHash)
-}
+  block.gasUsed.should.be.gt(0);
+  block.transactions.should.not.be.empty;
+  block.transactions.should.contain(deploymentTxHash);
+};
 
 const testGetBlockTxCount = (blockTxCount) => {
   Number(blockTxCount).should.be.gt(0)
