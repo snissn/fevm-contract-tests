@@ -100,9 +100,12 @@ commands:
       - run: nvm install v14
       - run: nvm use v14
       - run: nvm alias default v14
+      - run: npm install --global yarn
   generate_random_wallet:
     steps:
       - run: echo -n DEPLOYER_PRIVATE_KEY=0x > .env
+      - run: openssl rand -hex 32 >> .env
+      - run: echo -n USER_1_PRIVATE_KEY=0x >> .env
       - run: openssl rand -hex 32 >> .env
 
 jobs:
@@ -133,27 +136,55 @@ jobs:
       - run:
           command: npm install
       - run:
-          command: npx hardhat --network itest test ./test/web3.js/SimpleCoin.js
+          command: npx hardhat --network itest test
+  uniswap:
+    description: |
+      Run uniswap tests
+    parameters: &test-params
+      executor:
+        type: executor
+        default: golang
+      go-test-flags:
+        type: string
+        default: "-timeout 30m"
+        description: Flags passed to go test.
+      target:
+        type: string
+        default: "./..."
+        description: Import paths of packages to be tested.
+    executor: << parameters.executor >>
+    steps:
+      - prepare
       - run:
-          command: npx hardhat --network itest test ./test/web3.js/ERC20.js
+          command: make -C ./node node
+          no_output_timeout: 30m
       - run:
-          command: npx hardhat --network itest test ./test/ethers.js/SimpleCoin.js
+          command: ./node/bin/node
+          background: true
       - run:
-          command: npx hardhat --network itest test ./test/ethers.js/ERC20.js
+          command: npm install
+      - run:
+          command: cp .env ./extern/fevm-uniswap-v3-core/
+      - run:
+          command: cd ./extern/fevm-uniswap-v3-core/ && yarn
+      - run:
+          command: cd ./extern/fevm-uniswap-v3-core/ && npx hardhat --network itest test || true
 
 workflows:
   version: 2.1
   ci:
     jobs:
       - ethersjs_and_web3js
+      - uniswap
 
   nightly:
     triggers:
       - schedule:
-          cron: "0 0 * * *"
+          cron: "0 */6 * * *"
           filters:
             branches:
               only:
                 - main
     jobs:
       - ethersjs_and_web3js
+      - uniswap
