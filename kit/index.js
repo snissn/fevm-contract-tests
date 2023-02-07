@@ -4,14 +4,19 @@ const { ethers } = require("ethers");
 // Setup testing environment
 const nodeManagerUrl = "http://localhost:8090";
 
-function initNode(filAmount) {
+function initNode(filAmount, blockTimeMs) {
   if (!process.argv.includes("itest")) {
     return;
   }
+  blockTimeMs = blockTimeMs || 100; // Use 1s as default block time
   try {
     // create a clean environment for testing
     var res = JSON.parse(
-      request("POST", nodeManagerUrl + "/restart").getBody()
+      request("POST", nodeManagerUrl + "/restart", {
+        json: {
+          blockTimeMs: blockTimeMs,
+        },
+      }).getBody()
     );
     if (res.ready === false) {
       throw Error("node is not ready");
@@ -29,7 +34,6 @@ function initNode(filAmount) {
         amount: filAmount,
       },
     });
-    console.log(JSON.parse(res.getBody()));
     return nodeUrl;
   } catch (err) {
     console.log(
@@ -40,4 +44,22 @@ function initNode(filAmount) {
   }
 }
 
-module.exports = initNode;
+function sendFil(accounts, amount) {
+  if (!process.argv.includes("itest")) {
+    return;
+  }
+  accounts.forEach((acc) => {
+    res = request("POST", nodeManagerUrl + "/send", {
+      json: {
+        receiver: acc,
+        amount: amount,
+      },
+    });
+    console.log(JSON.parse(res.getBody()));
+  });
+}
+
+module.exports = {
+  initNode,
+  sendFil,
+};
