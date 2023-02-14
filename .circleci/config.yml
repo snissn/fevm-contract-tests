@@ -148,7 +148,7 @@ jobs:
       - store_artifacts:
           path: gasreport
       - slack/notify:
-          channel: C04NNT3GHFF 
+          channel: C04NNT3GHFF
           event: fail
           template: basic_fail_1
 
@@ -219,7 +219,7 @@ jobs:
       - run:
           command: cd ./extern/fevm-hardhat-kit/ && npx hardhat --network itest deploy
       - slack/notify:
-          channel: C04NNT3GHFF 
+          channel: C04NNT3GHFF
           event: fail
           template: basic_fail_1
   openzeppelin:
@@ -253,12 +253,9 @@ jobs:
       - run:
           command: cd ./extern/openzeppelin-contracts/ && npm install
       - run:
-          # remove the line of checking the revert reason
-          command: cd ./extern/openzeppelin-contracts/ && sed -i '/Wrong kind of exception received/d' node_modules/@openzeppelin/test-helpers/src/expectRevert.js
-      - run:
           command: cd ./extern/openzeppelin-contracts/ && npx hardhat --network itest test
       - slack/notify:
-          channel: C04NNT3GHFF 
+          channel: C04NNT3GHFF
           event: fail
           template: basic_fail_1
 
@@ -283,3 +280,5 @@ workflows:
     jobs:
       - ethersjs_and_web3js
       - fevm-hardhat-kit
+      - uniswap
+      - openzeppelin

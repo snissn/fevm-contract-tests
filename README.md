@@ -38,6 +38,11 @@ This repo is the test runner for all the project repo in the `extern/` folder.
    1. yarn
    2. npx hardhat --network itest test
 
+### Known issues
+1. Wrong kind of exception received: FVM's backtrace message format is different from Ethereum's, so this repo bypasses checking the revert reason by removing the following code from `node_modules/@openzeppelin/test-helpers/src/expectRevert.js`:
+
+   ```expect(actualError).to.equal(expectedError, 'Wrong kind of exception received');```
+
 ## License
 
 Dual-licensed: [MIT](./LICENSE-MIT), [Apache Software License v2](./LICENSE-APACHE), by way of the
