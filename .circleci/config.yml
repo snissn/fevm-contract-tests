@@ -70,7 +70,7 @@ commands:
                 command: |
                   curl https://sh.rustup.rs -sSf | sh -s -- -y
       - run: git submodule sync
-      - run: git submodule update --init
+      - run: git submodule update --init --recursive --remote
   download-params:
     steps:
       - restore_cache:
@@ -151,7 +151,6 @@ jobs:
           channel: C04NNT3GHFF
           event: fail
           template: basic_fail_1
-
   uniswap:
     description: |
       Run uniswap tests
@@ -222,7 +221,7 @@ jobs:
           channel: C04NNT3GHFF
           event: fail
           template: basic_fail_1
-  openzeppelin:
+  openzeppelin-fvm:
     description: |
       Run openzeppelin tests
     parameters: &test-params
@@ -247,6 +246,8 @@ jobs:
           command: ./node/bin/node
           background: true
       - run:
+          command: mkdir -p ./extern/openzeppelin-contracts/gasreport
+      - run:
           command: npm install
       - run:
           command: cp .env ./extern/openzeppelin-contracts/
@@ -254,6 +255,38 @@ jobs:
           command: cd ./extern/openzeppelin-contracts/ && npm install
       - run:
           command: cd ./extern/openzeppelin-contracts/ && npx hardhat --network itest test
+      - store_artifacts:
+          path: ./extern/openzeppelin-contracts/gasreport
+      - slack/notify:
+          channel: C04NNT3GHFF
+          event: fail
+          template: basic_fail_1
+  openzeppelin-evm:
+    description: |
+      Run openzeppelin tests using hardhat node
+    parameters: &test-params
+      executor:
+        type: executor
+        default: golang
+      go-test-flags:
+        type: string
+        default: "-timeout 30m"
+        description: Flags passed to go test.
+      target:
+        type: string
+        default: "./..."
+        description: Import paths of packages to be tested.
+    executor: << parameters.executor >>
+    steps:
+      - prepare
+      - run:
+          command: mkdir -p ./extern/openzeppelin-contracts/gasreport
+      - run:
+          command: npm install
+      - run:
+          command: cp .env ./extern/openzeppelin-contracts/
+      - run:
+          command: cd ./extern/openzeppelin-contracts/ && npm install
       - run:
           command: cd ./extern/openzeppelin-contracts/ && npx hardhat --network hardhat test
       - store_artifacts:
@@ -269,7 +302,8 @@ workflows:
     jobs:
       - ethersjs_and_web3js
       - uniswap
-      - openzeppelin
+      - openzeppelin-fvm
+      - openzeppelin-evm
       - fevm-hardhat-kit
 
   nightly:
@@ -284,4 +318,5 @@ workflows:
       - ethersjs_and_web3js
       - fevm-hardhat-kit
       - uniswap
-      - openzeppelin
+      - openzeppelin-fvm
+      - openzeppelin-evm
