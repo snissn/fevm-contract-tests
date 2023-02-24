@@ -254,6 +254,10 @@ jobs:
           command: cd ./extern/openzeppelin-contracts/ && npm install
       - run:
           command: cd ./extern/openzeppelin-contracts/ && npx hardhat --network itest test
+      - run:
+          command: cd ./extern/openzeppelin-contracts/ && npx hardhat --network hardhat test
+      - store_artifacts:
+          path: ./extern/openzeppelin-contracts/gasreport
       - slack/notify:
           channel: C04NNT3GHFF
           event: fail
@@ -276,7 +280,6 @@ workflows:
             branches:
               only:
                 - main
-                - ntwk/hyperspace
     jobs:
       - ethersjs_and_web3js
       - fevm-hardhat-kit
