@@ -62,6 +62,7 @@ jobs:
           private_key=$(echo $out | sed -e 's/\(.*\)\([a-f0-9]\{64\}\)/0x\2/' | grep 0x)
           echo "DEPLOYER_PRIVATE_KEY=$private_key" >> "$GITHUB_OUTPUT"
           echo "USER_1_PRIVATE_KEY=$private_key" >> "$GITHUB_OUTPUT"
+          cat $GITHUB_OUTPUT
       - name: 'Run tests: web3.js SimpleCoin'
         run: |
           npx hardhat --network local test ./test/web3.js/SimpleCoin.js
