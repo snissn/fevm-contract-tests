@@ -10,7 +10,9 @@ jobs:
   checkout:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout tests
+        uses: actions/checkout@v2
+      - name: Checkout Fendermint
         uses: actions/checkout@v2
         with:
           repository: 'consensus-shipyard/fendermint'
