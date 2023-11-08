@@ -1,8 +1,7 @@
 {
-  "name": "lotus-eth-api-integration-tests",
+  "name": "fevm-contract-tests-ipc",
   "version": "1.0.0-alpha.2",
   "description": "Integration tests for the Ethereum JSON-RPC API in Lotus",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
