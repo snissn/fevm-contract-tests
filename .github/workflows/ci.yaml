@@ -4,6 +4,7 @@ name: Run tests against Fendermint (Docker image)
 on:
   schedule:
     - cron: '0 0 * * *' # Run every day at midnight
+  workflow_dispatch: # Enable manual running
 
 jobs:
   checkout:
