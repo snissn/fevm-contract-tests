@@ -7,7 +7,7 @@ on:
   workflow_dispatch: # Enable manual running
 
 jobs:
-  checkout:
+  run:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout tests
@@ -49,7 +49,7 @@ jobs:
           cd $GITHUB_WORKSPACE/fendermint
           export BALANCE=1000000
           { out=$(cargo make --makefile ./infra/Makefile.toml testnode | tee /dev/fd/3); } 3>&1
-          private_key = $(echo $out | sed -e 's/\(.*\)\([a-f0-9]\{64\}\)/0x\2/' | grep 0x)
+          private_key=$(echo $out | sed -e 's/\(.*\)\([a-f0-9]\{64\}\)/0x\2/' | grep 0x)
           echo "DEPLOYER_PRIVATE_KEY=$private_key" >> "$GITHUB_OUTPUT"
           echo "USER_1_PRIVATE_KEY=$private_key" >> "$GITHUB_OUTPUT"
       - name: 'Run tests: web3.js SimpleCoin'
