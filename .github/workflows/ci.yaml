@@ -55,23 +55,35 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Run a testnode
+        id: testnode
         run: |
           cd $GITHUB_WORKSPACE/fendermint
           export BALANCE=1000000
           { out=$(cargo make --makefile ./infra/Makefile.toml testnode | tee /dev/fd/3); } 3>&1
           private_key=$(echo $out | sed -e 's/\(.*\)\([a-f0-9]\{64\}\)/0x\2/' | grep 0x)
-          echo "DEPLOYER_PRIVATE_KEY=$private_key" >> "$GITHUB_OUTPUT"
-          echo "USER_1_PRIVATE_KEY=$private_key" >> "$GITHUB_OUTPUT"
+          echo "PRIVATE_KEY=$private_key" >> "$GITHUB_OUTPUT"
           cat $GITHUB_OUTPUT
       - name: 'Run tests: web3.js SimpleCoin'
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+          USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
         run: |
           npx hardhat --network local test ./test/web3.js/SimpleCoin.js
       - name: 'Run tests: web3.js ERC20'
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+          USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
         run: |
           npx hardhat --network local test ./test/web3.js/ERC20.js
       - name: 'Run tests: ethers.js SimpleCoin'
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+          USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
         run: |
           npx hardhat --network local test ./test/ethers.js/SimpleCoin.js
       - name: 'Run tests: ethers.js ERC20'
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+          USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
         run: |
           npx hardhat --network local test ./test/ethers.js/ERC20.js
