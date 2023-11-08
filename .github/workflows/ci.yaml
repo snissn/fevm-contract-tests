@@ -1,5 +1,5 @@
 
-name: Run tests against Fendermint (Docker image)
+name: Run tests against Fendermint (remote Docker image)
 
 on:
   schedule:
@@ -15,6 +15,7 @@ jobs:
         with:
           repository: 'consensus-shipyard/fendermint'
           submodules: 'recursive'
+          path: 'fendermint'
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
@@ -31,6 +32,7 @@ jobs:
         run: cargo install -f cargo-make
       - name: Run a testnode
         run: |
+          cd $GITHUB_WORKSPACE/fendermint
           export BALANCE=1000000
           out = { $(cargo make --makefile ./infra/Makefile.toml testnode | tee /dev/fd/3); } 3>&1
           private_key = $(echo $out | sed -e 's/\(.*\)\([a-f0-9]\{64\}\)/0x\2/' | grep 0x)
