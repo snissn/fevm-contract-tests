@@ -64,24 +64,31 @@ jobs:
           echo "PRIVATE_KEY=$private_key" >> "$GITHUB_OUTPUT"
           cat $GITHUB_OUTPUT
       - name: 'Run tests: web3.js SimpleCoin'
+        if: always()
         env:
           DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
           USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
         run: |
           npx hardhat --network local test ./test/web3.js/SimpleCoin.js
       - name: 'Run tests: web3.js ERC20'
+        if: always()
+        timeout-minutes: 2
         env:
           DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
           USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
         run: |
           npx hardhat --network local test ./test/web3.js/ERC20.js
       - name: 'Run tests: ethers.js SimpleCoin'
+        if: always()
+        timeout-minutes: 2
         env:
           DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
           USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
         run: |
           npx hardhat --network local test ./test/ethers.js/SimpleCoin.js
       - name: 'Run tests: ethers.js ERC20'
+        if: always()
+        timeout-minutes: 2
         env:
           DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
           USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
