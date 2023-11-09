@@ -24,7 +24,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: 'latest'
           cache: 'npm'
       - name: Install dependencies
         run: npm install
@@ -104,8 +104,9 @@ jobs:
           DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
           USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
         run: |
-          cd ./extern/fevm-uniswap-v3-core/ && yarn
-          cd ./extern/fevm-uniswap-v3-core/ && npx hardhat --network local test || true
+          cd ./extern/fevm-uniswap-v3-core
+          yarn
+          npx hardhat --network local test || true
       - name: 'Run tests: OpenZeppelin'
         if: always()
         timeout-minutes: 30
@@ -113,5 +114,6 @@ jobs:
           DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
           USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
         run: |
-          cd ./extern/openzeppelin-contracts/ && npm install
-          cd ./extern/openzeppelin-contracts/ && npx hardhat --network local test
+          cd ./extern/openzeppelin-contracts/
+          npm install
+          npx hardhat --network local test
