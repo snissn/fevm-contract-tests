@@ -97,3 +97,21 @@ jobs:
           USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
         run: |
           npx hardhat --network local test ./test/ethers.js/ERC20.js
+      - name: 'Run tests: Uniswap'
+        if: always()
+        timeout-minutes: 30
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+          USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+        run: |
+          cd ./extern/fevm-uniswap-v3-core/ && yarn
+          cd ./extern/fevm-uniswap-v3-core/ && npx hardhat --network local test || true
+      - name: 'Run tests: OpenZeppelin'
+        if: always()
+        timeout-minutes: 30
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+          USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+        run: |
+          cd ./extern/openzeppelin-contracts/ && npm install
+          cd ./extern/openzeppelin-contracts/ && npx hardhat --network local test
