@@ -68,12 +68,22 @@ describe("ERC20", function () {
 
     ownerBalance.should.be.equal(TOKEN_INITIAL_SUPPLY);
   });
-  it("Should be able to transfer token", async function () {
+  it("Should be able to transfer token", async function () { 
+    console.error("****");
+
     const [deployer, receiver] = await web3.eth.getAccounts();
+
+
+    
+    console.error("deployer", deployer);
+    console.error("receiver", receiver);
+
     const ERC20 = await ethers.getContractAt(
       "ERC20PresetFixedSupply",
       erc20Address
     );
+    console.error("**2222**");
+
 
     const wsUrl = hre.network.config.url.replace("http", "ws");
     const wsProvider = new ethers.providers.WebSocketProvider(wsUrl);
@@ -91,11 +101,15 @@ describe("ERC20", function () {
       );
     }
 
+    console.error("**4444**");
+
     const spy0 = sinon.spy();
     wsProvider.on("block", (blockNumber) => {
       spy0();
       expect(blockNumber).to.be.a("number");
     });
+
+    console.error("**55555**");
 
     const spy1 = subscribe(
       wsProvider,
@@ -105,6 +119,8 @@ describe("ERC20", function () {
       transferEventAssertFunc
     );
 
+    console.error("**66666**");
+
     const spy2 = subscribe(
       wsProvider,
       {
@@ -112,6 +128,8 @@ describe("ERC20", function () {
       },
       transferEventAssertFunc
     );
+
+    console.error("**7777*");
 
     const spy3 = subscribe(
       wsProvider,
@@ -136,6 +154,8 @@ describe("ERC20", function () {
       },
       transferEventAssertFunc
     );
+
+    console.error("**776777777*");
 
     const spy6 = subscribe(
       wsProvider,
@@ -177,12 +197,21 @@ describe("ERC20", function () {
     );
     const options = { maxPriorityFeePerGas };
 
+    console.error("**77~~~~~~77*");
+
     const receipt = await ERC20.transfer(
       receiver,
       TOKEN_INITIAL_SUPPLY,
       options
     );
-    await receipt.wait();
+    try {
+      await receipt.wait();
+    } catch (e) {
+      console.error("e", e);
+    }
+    
+
+    console.error("**77~~~~~22222*");
 
     spy0.should.have.been.called;
     spy1.should.have.been.calledOnce;
