@@ -3,6 +3,7 @@ require('@nomiclabs/hardhat-ethers')
 require('@nomiclabs/hardhat-web3')
 require('@nomicfoundation/hardhat-chai-matchers')
 require("hardhat-gas-reporter");
+require('./tasks');
 
 const defaultNodeUrl = "http://localhost:8545";
 
@@ -12,7 +13,13 @@ module.exports = {
   networks: {
     local: {
       url: defaultNodeUrl,
-      accounts: [process.env.DEPLOYER_PRIVATE_KEY],
+      accounts: [
+        process.env.ROOT_PRIVATE_KEY,
+        process.env.ACCOUNT1_PRIVATE_KEY || process.env.ROOT_PRIVATE_KEY,
+        process.env.ACCOUNT2_PRIVATE_KEY || process.env.ROOT_PRIVATE_KEY,
+        process.env.ACCOUNT3_PRIVATE_KEY || process.env.ROOT_PRIVATE_KEY,
+        process.env.ACCOUNT4_PRIVATE_KEY || process.env.ROOT_PRIVATE_KEY,
+      ],
     },
     hardhat: {
       mining: {
@@ -21,11 +28,11 @@ module.exports = {
       },
       accounts: [
         {
-          privateKey: process.env.DEPLOYER_PRIVATE_KEY,
+          privateKey: process.env.ROOT_PRIVATE_KEY,
           balance: "1000000000000000000",
         },
         {
-          privateKey: process.env.USER_1_PRIVATE_KEY,
+          privateKey: process.env.ACCOUNT1_PRIVATE_KEY || process.env.ROOT_PRIVATE_KEY,
           balance: "1000000000000000000",
         }
       ],

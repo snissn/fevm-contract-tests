@@ -61,48 +61,55 @@ jobs:
         id: testnode
         run: |
           cd $GITHUB_WORKSPACE/fendermint
-          export BALANCE=1000000
+          export BALANCE=10000000000
           { out=$(cargo make --makefile ./infra/Makefile.toml testnode | tee /dev/fd/3); } 3>&1
           private_key=$(echo $out | sed -e 's/\(.*\)\([a-f0-9]\{64\}\)/0x\2/' | grep 0x | head -c66)
-          echo "PRIVATE_KEY=$private_key" >> "$GITHUB_OUTPUT"
+          echo "ROOT_PRIVATE_KEY=$private_key" >> "$GITHUB_OUTPUT"
           cat $GITHUB_OUTPUT
+      - name: 'Create and fund accounts'
+        id: accounts
+        env:
+          NUM_ACCOUNTS: 4
+          ROOT_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
+        run: |
+          npx hardhat --network local create-fund-accounts
       - name: 'Run tests: web3.js SimpleCoin'
         if: always()
         env:
-          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
-          USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
+          USER_1_PRIVATE_KEY: ${{ steps.accounts.outputs.ACCOUNT1_PRIVATE_KEY }}
         run: |
           npx hardhat --network local test ./test/web3.js/SimpleCoin.js
       - name: 'Run tests: web3.js ERC20'
         if: always()
         timeout-minutes: 2
         env:
-          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
-          USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
+          USER_1_PRIVATE_KEY: ${{ steps.accounts.outputs.ACCOUNT1_PRIVATE_KEY }}
         run: |
           npx hardhat --network local test ./test/web3.js/ERC20.js
       - name: 'Run tests: ethers.js SimpleCoin'
         if: always()
         timeout-minutes: 2
         env:
-          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
-          USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
+          USER_1_PRIVATE_KEY: ${{ steps.accounts.outputs.ACCOUNT1_PRIVATE_KEY }}
         run: |
           npx hardhat --network local test ./test/ethers.js/SimpleCoin.js
       - name: 'Run tests: ethers.js ERC20'
         if: always()
         timeout-minutes: 2
         env:
-          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
-          USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
+          USER_1_PRIVATE_KEY: ${{ steps.accounts.outputs.ACCOUNT1_PRIVATE_KEY }}
         run: |
           npx hardhat --network local test ./test/ethers.js/ERC20.js
       - name: 'Run tests: Uniswap'
         if: always()
         timeout-minutes: 30
         env:
-          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
-          USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
+          USER_1_PRIVATE_KEY: ${{ steps.accounts.outputs.ACCOUNT2_PRIVATE_KEY }}
         run: |
           cd ./extern/fevm-uniswap-v3-core && yarn
           npx hardhat --network local test || true
@@ -110,8 +117,8 @@ jobs:
         if: always()
         timeout-minutes: 30
         env:
-          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
-          USER_1_PRIVATE_KEY: ${{ steps.testnode.outputs.PRIVATE_KEY }}
+          DEPLOYER_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
+          USER_1_PRIVATE_KEY: ${{ steps.accounts.outputs.ACCOUNT3_PRIVATE_KEY }}
         run: |
           cd ./extern/openzeppelin-contracts/ && npm install
           npx hardhat --network local test
