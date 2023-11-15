@@ -111,8 +111,7 @@ jobs:
           ROOT_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
           USER_1_PRIVATE_KEY: ${{ steps.accounts.outputs.ACCOUNT2_PRIVATE_KEY }}
         run: |
-          cd ./extern/fevm-uniswap-v3-core && yarn
-          npx hardhat --network local test || true
+          cd ./extern/fevm-uniswap-v3-core && yarn && npx hardhat --network local test || true
       - name: 'Run tests: OpenZeppelin'
         if: always()
         timeout-minutes: 30
@@ -120,5 +119,4 @@ jobs:
           ROOT_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
           USER_1_PRIVATE_KEY: ${{ steps.accounts.outputs.ACCOUNT3_PRIVATE_KEY }}
         run: |
-          cd ./extern/openzeppelin-contracts/ && npm install
-          npx hardhat --network local test
+          cd ./extern/openzeppelin-contracts/ && npm install && npx hardhat --network local test
