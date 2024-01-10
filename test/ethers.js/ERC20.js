@@ -68,132 +68,132 @@ describe("ERC20", function () {
 
     ownerBalance.should.be.equal(TOKEN_INITIAL_SUPPLY);
   });
-  it("Should be able to transfer token", async function () {
-//    const [deployer, receiver] = await web3.eth.getAccounts();
-//    const ERC20 = await ethers.getContractAt(
-//      "ERC20PresetFixedSupply",
-//      erc20Address
-//    );
-//
-//    const wsUrl = hre.network.config.url.replace("http", "ws");
-//    const wsProvider = new ethers.providers.WebSocketProvider(wsUrl);
-//
-//    function transferEventAssertFunc(event) {
-//      event.address.should.equal(erc20Address);
-//      event.topics[0].should.equal(
-//        ethers.utils.id("Transfer(address,address,uint256)")
-//      );
-//      event.topics[1].should.equal(
-//        ethers.utils.hexZeroPad(deployer, 32).toLowerCase()
-//      );
-//      event.topics[2].should.equal(
-//        ethers.utils.hexZeroPad(receiver, 32).toLowerCase()
-//      );
-//    }
-//
-//    const spy0 = sinon.spy();
-//    wsProvider.on("block", (blockNumber) => {
-//      spy0();
-//      expect(blockNumber).to.be.a("number");
-//    });
-//
-//    const spy1 = subscribe(
-//      wsProvider,
-//      {
-//        address: erc20Address,
-//      },
-//      transferEventAssertFunc
-//    );
-//
-//    const spy2 = subscribe(
-//      wsProvider,
-//      {
-//        address: web3.eth.accounts.create().address,
-//      },
-//      transferEventAssertFunc
-//    );
-//
-//    const spy3 = subscribe(
-//      wsProvider,
-//      {
-//        topics: null,
-//      },
-//      transferEventAssertFunc
-//    );
-//
-//    const spy4 = subscribe(
-//      wsProvider,
-//      {
-//        topics: [],
-//      },
-//      transferEventAssertFunc
-//    );
-//
-//    const spy5 = subscribe(
-//      wsProvider,
-//      {
-//        topics: [ethers.utils.id("Transfer(address,address,uint256)")],
-//      },
-//      transferEventAssertFunc
-//    );
-//
-//    const spy6 = subscribe(
-//      wsProvider,
-//      {
-//        topics: [ethers.utils.id("NOTEXIST(address)")],
-//      },
-//      transferEventAssertFunc
-//    );
-//
-//    const spy7 = subscribe(
-//      wsProvider,
-//      {
-//        address: erc20Address,
-//        topics: [ethers.utils.id("Transfer(address,address,uint256)")],
-//      },
-//      transferEventAssertFunc
-//    );
-//
-//    const spy8 = subscribe(
-//      wsProvider,
-//      {
-//        address: erc20Address,
-//        topics: [ethers.utils.id("NOTEXIST(address)")],
-//      },
-//      transferEventAssertFunc
-//    );
-//
-//    const spy9 = subscribe(
-//      wsProvider,
-//      {
-//        address: erc20Address,
-//        topics: [null, ethers.utils.hexZeroPad(deployer, 32).toLowerCase()],
-//      },
-//      transferEventAssertFunc
-//    );
-//
-//    const maxPriorityFeePerGas = parseInt(
-//      await ethers.provider.send("eth_maxPriorityFeePerGas", [])
-//    );
-//    const options = { maxPriorityFeePerGas };
-//
-//    const receipt = await ERC20.transfer(
-//      receiver,
-//      TOKEN_INITIAL_SUPPLY,
-//      options
-//    );
-//    await receipt.wait();
-//
-//    spy0.should.have.been.called;
-//    spy1.should.have.been.calledOnce;
-//    spy2.should.not.have.been.called;
-//    spy3.should.have.been.calledOnce;
-//    spy4.should.have.been.calledOnce;
-//    spy5.should.have.been.calledOnce;
-//    spy6.should.not.have.been.called;
-//    spy7.should.have.been.calledOnce;
-//    spy8.should.not.have.been.called;
-//    spy9.should.have.been.calledOnce;
+  itWithCatch("Should be able to transfer token", async function () {
+    const [deployer, receiver] = await web3.eth.getAccounts();
+    const ERC20 = await ethers.getContractAt(
+      "ERC20PresetFixedSupply",
+      erc20Address
+    );
+
+    const wsUrl = hre.network.config.url.replace("http", "ws");
+    const wsProvider = new ethers.providers.WebSocketProvider(wsUrl);
+
+    function transferEventAssertFunc(event) {
+      event.address.should.equal(erc20Address);
+      event.topics[0].should.equal(
+        ethers.utils.id("Transfer(address,address,uint256)")
+      );
+      event.topics[1].should.equal(
+        ethers.utils.hexZeroPad(deployer, 32).toLowerCase()
+      );
+      event.topics[2].should.equal(
+        ethers.utils.hexZeroPad(receiver, 32).toLowerCase()
+      );
+    }
+
+    const spy0 = sinon.spy();
+    wsProvider.on("block", (blockNumber) => {
+      spy0();
+      expect(blockNumber).to.be.a("number");
+    });
+
+    const spy1 = subscribe(
+      wsProvider,
+      {
+        address: erc20Address,
+      },
+      transferEventAssertFunc
+    );
+
+    const spy2 = subscribe(
+      wsProvider,
+      {
+        address: web3.eth.accounts.create().address,
+      },
+      transferEventAssertFunc
+    );
+
+    const spy3 = subscribe(
+      wsProvider,
+      {
+        topics: null,
+      },
+      transferEventAssertFunc
+    );
+
+    const spy4 = subscribe(
+      wsProvider,
+      {
+        topics: [],
+      },
+      transferEventAssertFunc
+    );
+
+    const spy5 = subscribe(
+      wsProvider,
+      {
+        topics: [ethers.utils.id("Transfer(address,address,uint256)")],
+      },
+      transferEventAssertFunc
+    );
+
+    const spy6 = subscribe(
+      wsProvider,
+      {
+        topics: [ethers.utils.id("NOTEXIST(address)")],
+      },
+      transferEventAssertFunc
+    );
+
+    const spy7 = subscribe(
+      wsProvider,
+      {
+        address: erc20Address,
+        topics: [ethers.utils.id("Transfer(address,address,uint256)")],
+      },
+      transferEventAssertFunc
+    );
+
+    const spy8 = subscribe(
+      wsProvider,
+      {
+        address: erc20Address,
+        topics: [ethers.utils.id("NOTEXIST(address)")],
+      },
+      transferEventAssertFunc
+    );
+
+    const spy9 = subscribe(
+      wsProvider,
+      {
+        address: erc20Address,
+        topics: [null, ethers.utils.hexZeroPad(deployer, 32).toLowerCase()],
+      },
+      transferEventAssertFunc
+    );
+
+    const maxPriorityFeePerGas = parseInt(
+      await ethers.provider.send("eth_maxPriorityFeePerGas", [])
+    );
+    const options = { maxPriorityFeePerGas };
+
+    const receipt = await ERC20.transfer(
+      receiver,
+      TOKEN_INITIAL_SUPPLY,
+      options
+    );
+    await receipt.wait();
+
+    spy0.should.have.been.called;
+    spy1.should.have.been.calledOnce;
+    spy2.should.not.have.been.called;
+    spy3.should.have.been.calledOnce;
+    spy4.should.have.been.calledOnce;
+    spy5.should.have.been.calledOnce;
+    spy6.should.not.have.been.called;
+    spy7.should.have.been.calledOnce;
+    spy8.should.not.have.been.called;
+    spy9.should.have.been.calledOnce;
   });
 });
 
@@ -204,4 +204,22 @@ function subscribe(provider, filter, assertFunc) {
     assertFunc(event);
   });
   return spy;
+}
+
+// Custom it-wrapper function
+function itWithCatch(description, testFunc) {
+  it(description, async function() {
+    try {
+      // If the test function is async, await it
+      if (testFunc.constructor.name === 'AsyncFunction') {
+        await testFunc();
+      } else {
+        testFunc();
+      }
+    } catch (error) {
+      // Handle any errors that occur during the test
+      console.error("Error in test:", description, error);
+      throw error; // Re-throw to ensure the test fails correctly
+    }
+  });
 }
