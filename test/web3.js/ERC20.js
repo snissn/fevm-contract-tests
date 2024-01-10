@@ -18,16 +18,16 @@ let deployerAddr, erc20;
 
 describe("ERC20", function () {
   it("Should successfully deploy", async function () {
-    //deployerAddr = await getDeployerAddress();
-    //const { contract } = await deployContract(
-      //"ERC20PresetFixedSupply",
-      //TOKEN_NAME,
-      //TOKEN_SYMBOL,
-      //TOKEN_INITIAL_SUPPLY,
-      //deployerAddr
-    //);
-    //
-    //erc20 = await contract;
+    deployerAddr = await getDeployerAddress();
+    const { contract } = await deployContract(
+      "ERC20PresetFixedSupply",
+      TOKEN_NAME,
+      TOKEN_SYMBOL,
+      TOKEN_INITIAL_SUPPLY,
+      deployerAddr
+    );
+
+    erc20 = await contract;
   });
   it("Should set the right name", async function () {
     const name = await erc20.methods.name().call();
@@ -46,7 +46,7 @@ describe("ERC20", function () {
 
     ownerBalance.should.be.equal(TOKEN_INITIAL_SUPPLY);
   });
-  it("Should be able to transfer token", async function () {
+  itWithCatch("Should be able to transfer token", async function () {
     const [deployer, receiver] = await web3.eth.getAccounts();
 
     const wsUrl = hre.network.config.url.replace("http", "ws");
@@ -178,4 +178,23 @@ function subscribe(wsWeb3, filter, assertFunc) {
     assertFunc(event);
   });
   return spy;
+}
+
+
+// Custom it-wrapper function
+function itWithCatch(description, testFunc) {
+  it(description, async function() {
+    try {
+      // If the test function is async, await it
+      if (testFunc.constructor.name === 'AsyncFunction') {
+        await testFunc();
+      } else {
+        testFunc();
+      }
+    } catch (error) {
+      // Handle any errors that occur during the test
+      console.error("Error in test:", description, error);
+      throw error; // Re-throw to ensure the test fails correctly
+    }
+  });
 }
