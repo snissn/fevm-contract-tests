@@ -74,14 +74,12 @@ jobs:
         run: |
           npx hardhat --network local create-fund-accounts
       - name: 'Run tests: web3.js SimpleCoin'
-        if: always()
         env:
           ROOT_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
           USER_1_PRIVATE_KEY: ${{ steps.accounts.outputs.ACCOUNT1_PRIVATE_KEY }}
         run: |
           npx hardhat --network local test ./test/web3.js/SimpleCoin.js
       - name: 'Run tests: web3.js ERC20'
-        if: always()
         timeout-minutes: 2
         env:
           ROOT_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
@@ -89,7 +87,6 @@ jobs:
         run: |
           npx hardhat --network local test ./test/web3.js/ERC20.js
       - name: 'Run tests: ethers.js SimpleCoin'
-        if: always()
         timeout-minutes: 2
         env:
           ROOT_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
@@ -97,7 +94,6 @@ jobs:
         run: |
           npx hardhat --network local test ./test/ethers.js/SimpleCoin.js
       - name: 'Run tests: ethers.js ERC20'
-        if: always()
         timeout-minutes: 2
         env:
           ROOT_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
@@ -105,7 +101,6 @@ jobs:
         run: |
           npx hardhat --network local test ./test/ethers.js/ERC20.js
       - name: 'Run tests: Uniswap'
-        if: always()
         timeout-minutes: 5
         env:
           ROOT_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
@@ -113,7 +108,6 @@ jobs:
         run: |
           cd ./extern/fevm-uniswap-v3-core && yarn && npx hardhat --network local test || true
       - name: 'Run tests: OpenZeppelin'
-        if: always()
         timeout-minutes: 5
         env:
           ROOT_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
