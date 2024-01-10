@@ -106,7 +106,7 @@ jobs:
           npx hardhat --network local test ./test/ethers.js/ERC20.js
       - name: 'Run tests: Uniswap'
         if: always()
-        timeout-minutes: 30
+        timeout-minutes: 5
         env:
           ROOT_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
           USER_1_PRIVATE_KEY: ${{ steps.accounts.outputs.ACCOUNT2_PRIVATE_KEY }}
@@ -114,7 +114,7 @@ jobs:
           cd ./extern/fevm-uniswap-v3-core && yarn && npx hardhat --network local test || true
       - name: 'Run tests: OpenZeppelin'
         if: always()
-        timeout-minutes: 30
+        timeout-minutes: 5
         env:
           ROOT_PRIVATE_KEY: ${{ steps.testnode.outputs.ROOT_PRIVATE_KEY }}
           USER_1_PRIVATE_KEY: ${{ steps.accounts.outputs.ACCOUNT3_PRIVATE_KEY }}
