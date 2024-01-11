@@ -68,8 +68,8 @@ describe("ERC20", function () {
 
     ownerBalance.should.be.equal(TOKEN_INITIAL_SUPPLY);
   });
-  it("Should be able to transfer token", async function () {
-    return; //XXX
+  // FIXME: this doesn't work now
+  xit("Should be able to transfer token", async function () {
     const [deployer, receiver] = await web3.eth.getAccounts();
     const ERC20 = await ethers.getContractAt(
       "ERC20PresetFixedSupply",
