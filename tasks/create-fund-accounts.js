@@ -28,7 +28,7 @@ task("create-fund-accounts", "Create accounts and fund them with 100 coins each,
 
         if (process.env.GITHUB_ACTIONS) {
             const fs = require('fs');
-            const path = process.env.GITHUB_OUTPUT;
+            const path = process.env.GITHUB_ENV;
             const out = accounts.map((account, i) => `ACCOUNT${i + 1}_PRIVATE_KEY=${account.privateKey}`).join("\n");
             fs.appendFileSync(path, out);
         }
